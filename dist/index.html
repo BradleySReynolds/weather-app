@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
+    </style>
+    <link rel="stylesheet" href="style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <main id="main">
+      <div class="weather--container">
+        <div class="weather-type-con">
+          <p class="weather-type"></p>
+          <img class="weather-type-image" src="#" alt="weather type image" />
+        </div>
+        <p class="city-name"></p>
+        <p class="date"></p>
+        <p class="time"></p>
+        <p class="tempurature">
+          <span class="temp-val"></span> º<span class="foc">F</span>
+        </p>
+        <p class="display-type">Display ºC</p>
+        <div class="search--container">
+          <input
+            class="city-input"
+            type="text"
+            placeholder="Search for a location..."
+          />
+          <button class="ipt-btn">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+        <p class="error">
+          * Please Enter a Valid City, Zip Code or Latitude, Longitude
+          Coordinates
+        </p>
+      </div>
+      <div class="alt-weather--container">
+        <div class="alt-weather--item">
+          <img
+            class="item-img feels-like"
+            src="images/feels-like.png"
+            alt="feels like"
+          />
+          <div class="alt-weather--info">
+            <p class="alt-weather--para">Feels Like</p>
+            <p class="alt-weather--value">
+              <span class="fl-val"></span> º<span class="foc">F</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="alt-weather--item">
+          <img
+            class="item-img feels-like"
+            src="images/humiditiy.png"
+            alt="feels like"
+          />
+          <div class="alt-weather--info">
+            <p class="alt-weather--para">Humidity</p>
+            <p class="alt-weather--value"><span class="h-val"></span>%</p>
+          </div>
+        </div>
+
+        <div class="alt-weather--item">
+          <img
+            class="item-img feels-like"
+            src="images/chance-rain.png"
+            alt="feels like"
+          />
+          <div class="alt-weather--info">
+            <p class="alt-weather--para">Chance of Rain</p>
+            <p class="alt-weather--value"><span class="cr-val"></span>%</p>
+          </div>
+        </div>
+
+        <div class="alt-weather--item">
+          <img
+            class="item-img feels-like"
+            src="images/wind.png"
+            alt="feels like"
+          />
+          <div class="alt-weather--info">
+            <p class="alt-weather--para">Wind Speed</p>
+            <p class="alt-weather--value"><span class="ws-val"></span> mph</p>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div class="forcast-container"></div>
+    <script src="main.js"></script>
+  </body>
+</html>
