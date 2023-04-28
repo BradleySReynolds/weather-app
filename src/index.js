@@ -12,7 +12,7 @@ class Weather {
 
   getWeather = (city) => {
     fetch(
-      `http://api.weatherapi.com/v1/current.json?key=cc60e942151b4a0d8e741120232804&q=${city}&aqi=no`
+      `https://api.weatherapi.com/v1/current.json?key=cc60e942151b4a0d8e741120232804&q=${city}&aqi=no`
     )
       .then((res) => {
         if (res) {
@@ -78,7 +78,7 @@ class Weather {
 
   getForecast = (city) => {
     fetch(
-      `http://api.weatherapi.com/v1/forecast.json?key=cc60e942151b4a0d8e741120232804&q=${city}&days=9&aqi=no&alerts=no`
+      `https://api.weatherapi.com/v1/forecast.json?key=cc60e942151b4a0d8e741120232804&q=${city}&days=9&aqi=no&alerts=no`
     )
       .then((res) => {
         if (res) {
