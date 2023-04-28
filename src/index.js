@@ -143,7 +143,7 @@ const inputButton = document.querySelector(".ipt-btn");
 const displayType = document.querySelector(".display-type");
 
 let test = new Weather();
-test.getAllWeather("London");
+test.getAllWeather("Chesterton");
 
 inputButton.addEventListener("click", () => {
   test.getAllWeather(cityInput.value);
