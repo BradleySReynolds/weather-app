@@ -1,9 +1,15 @@
-import { format } from "date-fns";
+import moment, { format } from "moment";
+import { tz } from "moment-timezone";
+import { apiKey } from "./config";
+
+document.cookie = "SameSite=None";
 
 class Weather {
   constructor() {
     this.isFahr = true;
     this.currentCity = "";
+    this.timeZone = "";
+    this.timer = "";
   }
 
   setFahr = () => {
@@ -12,7 +18,7 @@ class Weather {
 
   getWeather = (city) => {
     fetch(
-      `https://api.weatherapi.com/v1/current.json?key=cc60e942151b4a0d8e741120232804&q=${city}&aqi=no`
+      `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=no`
     )
       .then((res) => {
         if (res) {
@@ -21,9 +27,17 @@ class Weather {
       })
       .then((data) => {
         this.currentCity = data.location.name;
+        this.timeZone = data.location.tz_id;
 
         let resErr = document.querySelector(".error");
         resErr.style.display = "none";
+
+        this.timer = setInterval(() => {
+          this.renderText(
+            document.querySelector(".time"),
+            moment().tz(this.timeZone).format("hh:mm:ss a")
+          );
+        }, 1000);
 
         this.renderText(
           document.querySelector(".weather-type"),
@@ -42,12 +56,7 @@ class Weather {
 
         this.renderText(
           document.querySelector(".date"),
-          format(new Date(data.location.localtime), "EEEE, do MMMM yy'")
-        );
-
-        this.renderText(
-          document.querySelector(".time"),
-          format(new Date(data.location.localtime), "h:m aaa")
+          moment(data.location.localtime).format("dddd, MMM Do YYYY")
         );
 
         this.renderText(
@@ -78,7 +87,7 @@ class Weather {
 
   getForecast = (city) => {
     fetch(
-      `https://api.weatherapi.com/v1/forecast.json?key=cc60e942151b4a0d8e741120232804&q=${city}&days=9&aqi=no&alerts=no`
+      `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=9`
     )
       .then((res) => {
         if (res) {
@@ -95,14 +104,11 @@ class Weather {
 
         const forcast = document.querySelector(".forcast-container");
         forcast.innerHTML = "";
-        data.forecast.forecastday.slice(2).forEach((element) => {
+        data.forecast.forecastday.forEach((element) => {
           let newItem = document.createElement("div");
           newItem.insertAdjacentHTML(
             "beforeend",
-            `<p class="forcast-date">${format(
-              new Date(element.date),
-              "EEEE"
-            )}</p>
+            `<p class="forcast-date">${moment(element.date).format("DD-MM")}</p>
             <p class="forcast-temp">${
               this.isFahr ? element.day.avgtemp_f : element.day.avgtemp_c
             } º${this.isFahr ? "F" : "C"}</p>
@@ -147,6 +153,7 @@ test.getAllWeather("Chesterton");
 
 inputButton.addEventListener("click", () => {
   test.getAllWeather(cityInput.value);
+  clearInterval(test.timer);
 });
 
 displayType.addEventListener("click", () => {
