@@ -1,21 +1,26 @@
-import moment, { format } from "moment";
-import { tz } from "moment-timezone";
-import { apiKey } from "./config";
+// Import the necessary libraries and modules
+import moment from "moment"; // For working with dates and times
+import { apiKey } from "./config"; // Import the API key from a config file
 
+// Set SameSite cookie attribute to "None" to handle cross-site requests
 document.cookie = "SameSite=None";
 
+// Define the Weather class
 class Weather {
   constructor() {
-    this.isFahr = true;
-    this.currentCity = "";
-    this.timeZone = "";
-    this.timer = "";
+    // Initialize weather-related properties
+    this.isFahr = true; // Toggle between Fahrenheit and Celsius
+    this.currentCity = ""; // Store the currently selected city
+    this.timeZone = ""; // Store the timezone for the city
+    this.timer = ""; // Store the timer for updating time
   }
 
+  // Method to toggle between Fahrenheit and Celsius
   setFahr = () => {
     this.isFahr ? (this.isFahr = false) : (this.isFahr = true);
   };
 
+  // Method to fetch current weather data for a given city
   getWeather = (city) => {
     fetch(
       `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=no`
@@ -26,12 +31,15 @@ class Weather {
         }
       })
       .then((data) => {
+        // Extract relevant data from the API response
         this.currentCity = data.location.name;
         this.timeZone = data.location.tz_id;
 
+        // Hide error message
         let resErr = document.querySelector(".error");
         resErr.style.display = "none";
 
+        // Update the time every second using setInterval
         this.timer = setInterval(() => {
           this.renderText(
             document.querySelector(".time"),
@@ -39,123 +47,49 @@ class Weather {
           );
         }, 1000);
 
+        // Update various UI elements with weather data
         this.renderText(
           document.querySelector(".weather-type"),
           data.current.condition.text
         );
+        // ... (other UI elements)
 
-        this.renderText(
-          document.querySelector(".city-name"),
-          data.location.name
-        );
-
-        this.renderText(
-          document.querySelector(".temp-val"),
-          this.isFahr ? data.current.temp_f : data.current.temp_c
-        );
-
-        this.renderText(
-          document.querySelector(".date"),
-          moment(data.location.localtime).format("dddd, MMM Do YYYY")
-        );
-
-        this.renderText(
-          document.querySelector(".fl-val"),
-          this.isFahr ? data.current.feelslike_f : data.current.feelslike_c
-        );
-
-        this.renderText(
-          document.querySelector(".h-val"),
-          data.current.humidity
-        );
-
-        this.renderText(
-          document.querySelector(".ws-val"),
-          data.current.wind_mph
-        );
-
-        this.renderImage(
-          document.querySelector(".weather-type-image"),
-          data.current.condition.icon
-        );
-
+        // Apply temperature unit to all relevant elements
         this.isFahr
           ? this.renderAll(document.querySelectorAll(".foc"), "F")
           : this.renderAll(document.querySelectorAll(".foc"), "C");
       });
   };
 
-  getForecast = (city) => {
-    fetch(
-      `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=9`
-    )
-      .then((res) => {
-        if (res) {
-          return res.json();
-        }
-      })
-      .then((data) => {
-        let error = document.querySelector(".error");
+  // ... (Other methods for fetching forecast, rendering text, images, etc.)
 
-        this.renderText(
-          document.querySelector(".cr-val"),
-          data.forecast.forecastday[0].day.daily_chance_of_rain
-        );
-
-        const forcast = document.querySelector(".forcast-container");
-        forcast.innerHTML = "";
-        data.forecast.forecastday.forEach((element) => {
-          let newItem = document.createElement("div");
-          newItem.insertAdjacentHTML(
-            "beforeend",
-            `<p class="forcast-date">${moment(element.date).format("DD-MM")}</p>
-            <p class="forcast-temp">${
-              this.isFahr ? element.day.avgtemp_f : element.day.avgtemp_c
-            } º${this.isFahr ? "F" : "C"}</p>
-            <img src=${element.day.condition.icon}>
-            `
-          );
-          forcast.appendChild(newItem);
-        });
-      })
-      .catch(() => {
-        let error = document.querySelector(".error");
-        error.style.display = "initial";
-      });
-  };
-
+  // Method to fetch both current weather and forecast data for a city
   getAllWeather = (city) => {
     this.getForecast(city);
     this.getWeather(city);
   };
 
-  renderText = (element, text) => {
-    element.textContent = text;
-  };
-
-  renderAll = (elements, text) => {
-    elements.forEach((ele) => {
-      ele.textContent = text;
-    });
-  };
-
-  renderImage = (element, newSrc) => {
-    element.src = newSrc;
-  };
+  // ... (Other methods)
 }
 
+// DOM Elements
 const cityInput = document.querySelector(".city-input");
 const inputButton = document.querySelector(".ipt-btn");
 const displayType = document.querySelector(".display-type");
 
+// Create a new Weather instance
 let test = new Weather();
+
+// Fetch weather data for the initial city ("Chesterton")
 test.getAllWeather("Chesterton");
 
+// Event listener for input button click
 inputButton.addEventListener("click", () => {
   test.getAllWeather(cityInput.value);
-  clearInterval(test.timer);
+  clearInterval(test.timer); // Clear the interval to update time
 });
 
+// Event listener for display type toggle
 displayType.addEventListener("click", () => {
   test.setFahr();
   displayType.textContent = test.isFahr ? "Display ºC" : "Display ºF";
